@@ -1,11 +1,11 @@
-"""
+def new_board() -> list[list[None]]:
+  """
 
     This function initializes a playing board with the values being set to 'None' by default
 
     Returns: A multi-dimensional list representing the playing board
 
-"""
-def new_board() -> list[list[None]]:
+  """
   
   board = [
   [None, None, None],
@@ -14,7 +14,9 @@ def new_board() -> list[list[None]]:
 
   return board
 
-"""
+
+def print_board(board: list[list[str]]) -> None:
+  """
 
     in: Takes in a multi-dimensional lists which is used to represent the playing board
 
@@ -22,8 +24,7 @@ def new_board() -> list[list[None]]:
 
     Returns: None
 
-"""
-def print_board(board: list[list]) -> None:
+  """
   print("\n  0  1  2")
   print("  -------")
   print(f"0|{board[0][0]}  {board[0][1]}  {board[0][2]}|")
@@ -32,27 +33,64 @@ def print_board(board: list[list]) -> None:
   print("  -------\n")
 
 
-"""
+def get_move() -> tuple[int, int]:
+  """
+  
+  Accepts user input for an x and y coordinate that will be stored in a tuple for updating the playing board
+
+  Returns: A tuple of two integers that represents the coordinates of the user's move
+  
+  """
+
+# TODO: Add error-handling for the input (valid coordinates only), maybe a new function can do this?
+  x_cord = int(input("What is your move's X-coordinate? "))
+  y_cord = int(input("What is your move's Y-coordinate? "))
+
+  coordinates = (x_cord, y_cord)
+  return coordinates
+
+
+def make_move(board: list[list[str]], coordinates: tuple[int, int], symbol: str) -> list[list[str]]:
+  """
+  
+  in: Takes in a multi-dimensional list represting the playing board
+  in: Takes in a two-element tuple of ints that represent the coordinates of the move to be made
+  in: A string of length one that represents the symbol that's used by the player making the move; either 'X' or 'O'
+
+  This function creates a new playing board which is the same as the previous one with the exception of the recent move made by a player
+
+  Returns: A multi-dimensional list representing the updated playing board
+  
+  """
+
+  new_board = board # Create a copy of the board that will be updated
+  new_board[coordinates[0]][coordinates[1]] = symbol # Update the new_board to avoid possible unexpected behaviour associated with mutation
+
+  return new_board
+
+
+
+def main() -> None:
+  """
 
     Currently used for testing purposes
 
     Returns: None
 
-"""
-def main() -> None:
+  """
+
   board = new_board()
-  
-  # Test code for the print_board function
-  board[0][0] = 'X'
-  board[0][1] = 'X'
-  board[0][2] = 'O'
-  board[1][0] = 'X'
-  board[1][1] = 'X'
-  board[1][2] = 'O'
-  board[2][0] = 'X'
-  board[2][1] = 'X'
-  board[2][2] = 'O'
   print_board(board)
+  
+  coords = get_move()
+  print(coords)
+
+  print_board(make_move(board, coords, 'X'))
+
+  coords = get_move()
+  print(coords)
+
+  print_board(make_move(board, coords, 'O'))
 
 main()
 
