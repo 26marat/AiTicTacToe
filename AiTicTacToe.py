@@ -68,6 +68,45 @@ def make_move(board: list[list[str]], coordinates: tuple[int, int], symbol: str)
 
   return new_board
 
+def get_winner(board: list[list[str]]) -> str:
+  """
+  
+  in: Takes in a multi-dimensional list represting the playing board
+
+  This function checks for possible combinations of 3 'X' or 'O' in a row and declares a winner if there is
+
+  Returns: The id of the player that won ('X' or 'O') or None if there is no winner yet
+  
+  """
+
+  # Since this is a 3x3 board we will use brute force to check
+  # Of course, for a larger board we would develop an algorithm to check, but this works well for now
+  lines = [
+    board[0], board[1], board[2], # Rows 1,2,3
+
+    [board[0][0], board[1][0], board[2][0]], # Cols 1,2,3
+    [board[0][1], board[1][1], board[2][1]],
+    [board[0][2], board[1][2], board[2][2]],
+
+    [board[0][0], board[1][1], board[2][2]], # Diagonals 1,2
+    [board[0][2], board[1][1], board[2][0]]
+  ]
+
+  winnerA = ['X', 'X', 'X']
+  winnerB = ['O', 'O', 'O']
+
+  # Loop through the possible lines and return a winner if possible
+  for line in lines:
+
+    if line == winnerA:
+      return 'X'
+    
+    elif line == winnerB:
+      return 'O'
+
+  return None
+
+  
 
 
 def main() -> None:
@@ -79,18 +118,46 @@ def main() -> None:
 
   """
 
-  board = new_board()
-  print_board(board)
+  board_1 = [
+  ['X', 'X', 'O'],
+  ['O', None, 'X'],
+  ['O', 'O', 'X']]
   
-  coords = get_move()
-  print(coords)
+  print(get_winner(board_1))
+#   # Loop until the game is over
+#   board = new_board()
+#   current_turn = 0
+#   while True:
 
-  print_board(make_move(board, coords, 'X'))
+#     # Print out the board and get coordinates
+#     print_board(board)
+#     coords = get_move()
 
-  coords = get_move()
-  print(coords)
+#     # Alternate turns between player using 'X' and player using 'O'
+#     # Player with 'X' makes the first move
+#     if current_turn % 2 == 0:
+#       make_move(board, coords, 'X')
+#     else:
+#       make_move(board, coords, 'O')
 
-  print_board(make_move(board, coords, 'O'))
+#     current_turn += 1 # Alternate turn
+
+#     # HERE WE WOULD CHECK FOR THE WINNER
+      
+      
+
+#   board = new_board()
+#   print_board(board)
+
+#   coords = get_move()
+#   print(coords)
+
+#   print_board(make_move(board, coords, 'X'))
+
+#   coords = get_move()
+#   print(coords)
+
+#   print_board(make_move(board, coords, 'O'))
 
 main()
 
