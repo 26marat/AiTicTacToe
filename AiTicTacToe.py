@@ -33,21 +33,38 @@ def print_board(board: list[list[str]]) -> None:
   print("  -------\n")
 
 
-def get_move() -> tuple[int, int]:
+def get_move(board: list[list[str]]) -> tuple[int, int]:
   """
   
+  in: Takes in a multi-dimensional lists which is used to represent the playing board
+
   Accepts user input for an x and y coordinate that will be stored in a tuple for updating the playing board
 
   Returns: A tuple of two integers that represents the coordinates of the user's move
   
   """
 
-# TODO: Add error-handling for the input (valid coordinates only), maybe a new function can do this?
-  x_cord = int(input("What is your move's X-coordinate? "))
-  y_cord = int(input("What is your move's Y-coordinate? "))
-
-  coordinates = (x_cord, y_cord)
-  return coordinates
+  while True:
+        try:
+            
+            x_cord = int(input("What is your move's X-coordinate? "))
+            y_cord = int(input("What is your move's Y-coordinate? "))
+            
+            # Check if coordinates are within valid range
+            if not (0 <= x_cord <= 2 and 0 <= y_cord <= 2):
+                print("\nInvalid coordinates. Please enter values between 0 and 2.\n")
+                continue
+            
+            # Check if the position is already taken
+            if board[x_cord][y_cord] is not None:
+                print("\nThat cell is already occupied. Choose a different one.\n")
+                continue
+            
+            return (x_cord, y_cord)
+        
+        except ValueError:
+            # Handle invalid input that can't be converted to an integer
+            print("\nInvalid input. Please enter an integer between 0 and 2.\n")
 
 
 def make_move(board: list[list[str]], coordinates: tuple[int, int], symbol: str) -> list[list[str]]:
@@ -106,7 +123,23 @@ def get_winner(board: list[list[str]]) -> str:
 
   return None
 
+def is_board_full(board: list[list[str]]) -> bool:
+  """
   
+  in: Takes in a multi-dimensional list represting the playing board
+
+  This function loops over the squares in each column of the board and checks if they are empty (None)
+
+  Returns: False if empty (None) values are present, or True if each value is either an 'X' or an 'O'
+  
+  """
+
+  for column in board:
+     for square in column:
+        if square is None:
+           return False
+        
+  return True
 
 
 def main() -> None:
@@ -118,46 +151,36 @@ def main() -> None:
 
   """
 
-  board_1 = [
-  ['X', 'X', 'O'],
-  ['O', None, 'X'],
-  ['O', 'O', 'X']]
-  
-  print(get_winner(board_1))
-#   # Loop until the game is over
-#   board = new_board()
-#   current_turn = 0
-#   while True:
+  # Loop until the game is over
+  board = new_board()
+  current_turn = 0
+  while True:
 
-#     # Print out the board and get coordinates
-#     print_board(board)
-#     coords = get_move()
+    # Print out the board and get coordinates
+    print_board(board)
+    coords = get_move(board)
 
-#     # Alternate turns between player using 'X' and player using 'O'
-#     # Player with 'X' makes the first move
-#     if current_turn % 2 == 0:
-#       make_move(board, coords, 'X')
-#     else:
-#       make_move(board, coords, 'O')
+    # Alternate turns between player using 'X' and player using 'O'
+    # Player with 'X' makes the first move
+    if current_turn % 2 == 0:
+      make_move(board, coords, 'X')
+    else:
+      make_move(board, coords, 'O')
 
-#     current_turn += 1 # Alternate turn
+    winner = get_winner(board)
+    if winner is not None:
+      print_board(board)
+      print(f"\nGAME OVER! Player with ID '{winner}' has won.")
+      break
 
-#     # HERE WE WOULD CHECK FOR THE WINNER
-      
-      
+    if is_board_full(board):
+      print_board(board)
+      print(f"GAME OVER! The game is a DRAW.")
+      break
 
-#   board = new_board()
-#   print_board(board)
+    current_turn += 1 # Alternate turn
 
-#   coords = get_move()
-#   print(coords)
 
-#   print_board(make_move(board, coords, 'X'))
-
-#   coords = get_move()
-#   print(coords)
-
-#   print_board(make_move(board, coords, 'O'))
 
 main()
 
