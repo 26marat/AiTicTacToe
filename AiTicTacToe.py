@@ -26,11 +26,14 @@ def print_board(board: list[list[str]]) -> None:
 
   """
   print("\n  0  1  2")
-  print("  -------")
-  print(f"0|{board[0][0]}  {board[0][1]}  {board[0][2]}|")
-  print(f"1|{board[1][0]}  {board[1][1]}  {board[1][2]}|")
-  print(f"2|{board[2][0]}  {board[2][1]}  {board[2][2]}|")
-  print("  -------\n")
+  print("  ---------")
+  for row in range(3):
+        print(f"{row}|", end="")
+        for col in range(3):
+            # Print an empty space instead of None
+            print(f" {board[row][col] if board[row][col] is not None else ' '} ", end="")
+        print("|")
+  print("  ---------\n")
 
 
 def get_move(board: list[list[str]]) -> tuple[int, int]:
