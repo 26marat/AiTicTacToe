@@ -159,18 +159,21 @@ def random_ai(board: list[list[str]], player: str) -> tuple[int, int]:
   
   """
 
-  legal_moves = []
-
-  for row in range(len(board)):
-    for col in range(len(board[row])):
-      if board[row][col] is None:
-         move = (row, col)
-         legal_moves.append(move)
-
+  legal_moves = get_legal_moves(board)
   selected_move = random.choice(legal_moves)
+
   return selected_move
 
-def get_legal_moves(board):
+def get_legal_moves(board: list[list[str]]) -> list[tuple[int, int]]:
+  """
+  
+  in: Takes in a multi-dimensional list represting the playing board
+
+  This function iterates through the playing board and locates all the legal moves that can be made
+
+  Returns: A list of tuples containing the coordinates of legal moves
+  
+  """
    
   legal_moves = []
 
@@ -183,7 +186,18 @@ def get_legal_moves(board):
   return legal_moves
    
 
-def minimax_ai(board, player):
+def minimax_ai(board: list[list[str]], player: str):
+  """
+  
+  in: Takes in a multi-dimensional list represting the playing board
+  in: Takes in a character representing the AI player (always 'O')
+
+  This minimax algorithim iterates through the board, calling on its helper function to find an optimal move
+  which is calculated by the score returned by helper
+
+  Returns: Optimal move to be made by the AI
+  
+  """
   optimal_move = None
   optimal_score = None
 
@@ -202,7 +216,20 @@ def minimax_ai(board, player):
   return optimal_move
 
 
-def minimax_score(board, opponent, player):
+def minimax_score(board: list[list[str]], opponent: str, player: str) -> int:
+  """
+  
+  in: Takes in a multi-dimensional list represting the playing board
+  in: Takes in a character representing the HUMAN player (always 'X')
+  in: Takes in a character representing the AI player (always 'O')
+
+  This function is used to calculate the score for a move (10 for a winning move, -10 for loss, 0 for a draw),
+  all of the human player's possible moves are simulated and score for each is kept track of. Eventually, the max score is taken
+  to determine the optimal move
+
+  Returns: Max score for AI's turn, minimum score for human player's turn
+  
+  """
   winner = get_winner(board)
   
   # If the game is done, return appropriate score
@@ -235,7 +262,7 @@ def minimax_score(board, opponent, player):
 def main() -> None:
   """
 
-    Currently used for testing purposes
+    The main function used to simulate the game. The user can slightly modify it to choose how they want the game to be played.
 
     Returns: None
 
@@ -248,14 +275,14 @@ def main() -> None:
 
     # Print out the board and get coordinates
     print_board(board)
-    # coords = get_move(board)
 
-    # Alternate turns between player using 'X' and player using 'O'
+    # Alternate turns between player using 'X' and AI using 'O'
     # Player with 'X' makes the first move
     if current_turn % 2 == 0:
       coords = get_move(board)
       make_move(board, coords, 'X')
     else:
+      # coords = random_ai(board, 'O')
       coords = minimax_ai(board, 'O')
       make_move(board, coords, 'O')
 
@@ -271,6 +298,5 @@ def main() -> None:
       break
 
     current_turn += 1 # Alternate turn
-
-
+    
 main()
