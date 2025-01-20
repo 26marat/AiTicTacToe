@@ -1,3 +1,5 @@
+import random
+
 def new_board() -> list[list[None]]:
   """
 
@@ -144,6 +146,28 @@ def is_board_full(board: list[list[str]]) -> bool:
         
   return True
 
+def random_ai(board: list[list[str]], player: str) -> tuple[int, int]:
+  """
+  
+  in: Takes in a multi-dimensional list represting the playing board
+  in: Takes in a string representing the player ('X' or 'O')
+
+  This function gets an AI to examine legal moves available to it, and then make a move
+
+  Returns: A tuple containing the coordinates of the move selected by the AI
+  
+  """
+
+  legal_moves = []
+
+  for row in range(len(board)):
+    for col in range(len(board[row])):
+      if board[row][col] is None:
+         move = (row, col)
+         legal_moves.append(move)
+
+  selected_move = random.choice(legal_moves)
+  return selected_move
 
 def main() -> None:
   """
@@ -161,13 +185,16 @@ def main() -> None:
 
     # Print out the board and get coordinates
     print_board(board)
-    coords = get_move(board)
+    # coords = get_move(board)
 
     # Alternate turns between player using 'X' and player using 'O'
     # Player with 'X' makes the first move
     if current_turn % 2 == 0:
+      # coords = get_move(board)
+      coords = random_ai(board, 'X')
       make_move(board, coords, 'X')
     else:
+      coords = random_ai(board, 'O')
       make_move(board, coords, 'O')
 
     winner = get_winner(board)
@@ -184,38 +211,4 @@ def main() -> None:
     current_turn += 1 # Alternate turn
 
 
-
 main()
-
-# # Loop through turns until the game is over
-# loop forever:
-#   # TODO: hmm I'm not sure how best to do this
-#   # right now. No problem, I'll come back later.
-#   current_player = ???
-
-#   # Print the current state of the board
-#   render(board)
-
-#   # Get the move that the current player is going
-#   # to make.
-#   move_co_ords = get_move()
-
-#   # Make the move that we calculated above
-#   make_move(board, move_co_ords, current_player)
-
-#   # Work out if there's a winner
-#   winner = get_winner(board)
-
-#   # If there is a winner, crown them the champion
-#   # and exit the loop.
-#   if winner is not None:
-#     print "WINNER IS %s!!" % winner
-#     break
-
-#   # If there is no winner and the board is full,
-#   # exit the loop.
-#   if is_board_full(board):
-#     print "IT'S A DRAW!!"
-#     break
-
-#   # Repeat until the game is over
