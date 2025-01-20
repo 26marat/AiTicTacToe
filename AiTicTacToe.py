@@ -1,4 +1,5 @@
 import random
+import copy
 
 def new_board() -> list[list[None]]:
   """
@@ -169,6 +170,68 @@ def random_ai(board: list[list[str]], player: str) -> tuple[int, int]:
   selected_move = random.choice(legal_moves)
   return selected_move
 
+def get_legal_moves(board):
+   
+  legal_moves = []
+
+  for row in range(len(board)):
+    for col in range(len(board[row])):
+      if board[row][col] is None:
+         move = (row, col)
+         legal_moves.append(move)
+    
+  return legal_moves
+   
+
+def minimax_ai(board, player):
+  optimal_move = None
+  optimal_score = None
+
+  # Player is always 'X' and AI is always 'O'
+  opponent = 'X'
+
+  for move in get_legal_moves(board):
+    _board = copy.deepcopy(board)  # Make a deep copy of the board to simulate the move
+    make_move(_board, move, opponent)  # AI makes the move as 'O'
+
+    score = minimax_score(_board, opponent, player)  # Get the score for this move
+    if optimal_score is None or score > optimal_score: # Update the optimal score & move when possible
+       optimal_move = move
+       optimal_score = score
+
+  return optimal_move
+
+
+def minimax_score(board, opponent, player):
+  winner = get_winner(board)
+  
+  # If the game is done, return appropriate score
+  if winner is not None:
+    if winner == player:
+        return -10  # AI Loss
+    elif winner == opponent:
+        return 10  # AI Win
+  
+  elif is_board_full(board):
+     return 0  # Draw
+  
+  legal_moves = get_legal_moves(board)
+  scores = []
+
+  for move in legal_moves:
+    _board = copy.deepcopy(board)
+    make_move(_board, move, player)  # Current player makes a move
+    
+    # Recursively evaluate the score for the opponent's turn
+    score = minimax_score(_board, opponent, player)
+    scores.append(score)
+
+  if opponent == 'O':  # AI's turn (maximize the score)
+     return max(scores)
+  else:  # Player's turn (minimize the score)
+     return min(scores)   
+
+
 def main() -> None:
   """
 
@@ -190,11 +253,10 @@ def main() -> None:
     # Alternate turns between player using 'X' and player using 'O'
     # Player with 'X' makes the first move
     if current_turn % 2 == 0:
-      # coords = get_move(board)
-      coords = random_ai(board, 'X')
+      coords = get_move(board)
       make_move(board, coords, 'X')
     else:
-      coords = random_ai(board, 'O')
+      coords = minimax_ai(board, 'O')
       make_move(board, coords, 'O')
 
     winner = get_winner(board)
